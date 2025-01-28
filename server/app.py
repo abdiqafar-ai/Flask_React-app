@@ -102,11 +102,19 @@ def doctor_dashboard():
 @app.route('/admin/dashboard', methods=['GET'])
 @jwt_required()
 def admin_dashboard():
-    current_user_id = get_jwt_identity()
-    current_user = User.query.filter_by(id=current_user_id).first()
-    if current_user.role != 'admin':
-        raise Forbidden("Access denied. Only admins can access this dashboard.")
-    return jsonify(message="Welcome to the admin dashboard."), 200
+    users = [u.as_dict() for u in User.query.all()]
+    patients = [p.as_dict() for p in Patient.query.all()]
+    doctors = [d.as_dict() for d in Doctor.query.all()]
+    appointments = [a.as_dict() for a in Appointment.query.all()]
+    medical_records = [mr.as_dict() for mr in MedicalRecord.query.all()]
+
+    return jsonify({
+        "users": users,
+        "patients": patients,
+        "doctors": doctors,
+        "appointments": appointments,
+        "medical_records": medical_records
+    })
 
 @app.route('/user/<int:user_id>/privacy', methods=['GET'])
 @jwt_required()
