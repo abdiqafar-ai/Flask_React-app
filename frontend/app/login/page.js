@@ -8,7 +8,7 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [registrationCode, setRegistrationCode] = useState("");
-  const [role, setRole] = useState("patient"); // Default role: patient
+  const [role, setRole] = useState("patient"); 
   const router = useRouter();
 
   const handleSubmit = async (e) => {
@@ -28,9 +28,8 @@ function Login() {
       const result = await response.json();
 
       if (response.ok) {
-        localStorage.setItem("access_token", result.access_token); // Store the token
+        localStorage.setItem("access_token", result.access_token);
 
-        // Redirect based on role
         const { role } = result;
         switch (role) {
           case "admin":
@@ -41,7 +40,7 @@ function Login() {
             break;
           case "patient":
           default:
-            router.push("/patient");
+            router.push("/patients"); // Redirect to the patient page
             break;
         }
       } else {
@@ -85,22 +84,6 @@ function Login() {
             required
           />
         </div>
-
-        {/* <div className="mb-4">
-          <label className="block text-sm font-medium" htmlFor="role">
-            Role
-          </label>
-          <select
-            id="role"
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-            className="w-full border px-4 py-2 rounded"
-          >
-            <option value="patient">Patient</option>
-            <option value="doctor">Doctor</option>
-            <option value="admin">Admin</option>
-          </select>
-        </div> */}
 
         {role === "doctor" && (
           <div className="mb-4">
