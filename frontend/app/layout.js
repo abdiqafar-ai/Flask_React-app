@@ -18,7 +18,9 @@ export default function RootLayout({ children }) {
       <head>
         <link rel="icon" href="/drugs.ico" />{" "}
       </head>
-      <body className={`${poppins.className}`}>{children}</body>
+      <body className={`${poppins.className}`}>
+        {children}
+        </body>
     </html>
   );
 }
