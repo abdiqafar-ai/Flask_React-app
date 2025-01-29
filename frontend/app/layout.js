@@ -1,5 +1,6 @@
+// app/layout.js
 import { Poppins } from "next/font/google";
-import "./globals.css";
+import "./globals.css"; // Ensure the correct path to your global CSS file
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -16,11 +17,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/drugs.ico" />{" "}
+        <link rel="icon" href="/drugs.ico" />
+        <title>{metadata.title}</title>
+        <meta name="description" content={metadata.description} />
       </head>
-      <body className={`${poppins.className}`}>
-        {children}
-        </body>
+      <body className={`${poppins.className}`}>{children}</body>
     </html>
   );
 }
