@@ -1,3 +1,4 @@
+// components/AddAppointmentForm.js
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import api from "../services/api";
@@ -25,45 +26,147 @@ const AddAppointmentForm = ({ onAdd }) => {
         try {
           await api.post("/appointments", values);
           resetForm();
-          onAdd();
+          onAdd(); 
         } catch (error) {
           console.error("Error adding appointment:", error);
         }
         setSubmitting(false);
       }}
     >
-      <Form>
+      <Form className="space-y-6 max-w-lg mx-auto p-8 bg-white shadow-lg rounded-lg">
+        <h2 className="text-2xl font-semibold text-center text-teal-700">
+          Add New Appointment
+        </h2>
+
+
         <div>
-          <label htmlFor="date">Date</label>
-          <Field name="date" type="date" />
-          <ErrorMessage name="date" />
+          <label
+            htmlFor="date"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Date
+          </label>
+          <Field
+            name="date"
+            type="date"
+            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+          />
+          <ErrorMessage
+            name="date"
+            component="div"
+            className="text-sm text-red-500"
+          />
         </div>
+
+
         <div>
-          <label htmlFor="time">Time</label>
-          <Field name="time" type="time" />
-          <ErrorMessage name="time" />
+          <label
+            htmlFor="time"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Time
+          </label>
+          <Field
+            name="time"
+            type="time"
+            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+          />
+          <ErrorMessage
+            name="time"
+            component="div"
+            className="text-sm text-red-500"
+          />
         </div>
+
+
         <div>
-          <label htmlFor="reason">Reason</label>
-          <Field name="reason" type="text" />
-          <ErrorMessage name="reason" />
+          <label
+            htmlFor="reason"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Reason
+          </label>
+          <Field
+            name="reason"
+            type="text"
+            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+          />
+          <ErrorMessage
+            name="reason"
+            component="div"
+            className="text-sm text-red-500"
+          />
         </div>
+
+
         <div>
-          <label htmlFor="patient_id">Patient ID</label>
-          <Field name="patient_id" type="number" />
-          <ErrorMessage name="patient_id" />
+          <label
+            htmlFor="patient_id"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Patient ID
+          </label>
+          <Field
+            name="patient_id"
+            type="number"
+            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+          />
+          <ErrorMessage
+            name="patient_id"
+            component="div"
+            className="text-sm text-red-500"
+          />
         </div>
+
+
         <div>
-          <label htmlFor="doctor_id">Doctor ID</label>
-          <Field name="doctor_id" type="number" />
-          <ErrorMessage name="doctor_id" />
+          <label
+            htmlFor="doctor_id"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Doctor ID
+          </label>
+          <Field
+            name="doctor_id"
+            type="number"
+            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+          />
+          <ErrorMessage
+            name="doctor_id"
+            component="div"
+            className="text-sm text-red-500"
+          />
         </div>
+
+
         <div>
-          <label htmlFor="notes">Notes</label>
-          <Field name="notes" type="text" />
-          <ErrorMessage name="notes" />
+          <label
+            htmlFor="notes"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Notes
+          </label>
+          <Field
+            name="notes"
+            type="text"
+            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+          />
+          <ErrorMessage
+            name="notes"
+            component="div"
+            className="text-sm text-red-500"
+          />
         </div>
-        <button type="submit">Add Appointment</button>
+
+
+        <div className="flex justify-center">
+          <button
+            type="submit"
+            className="w-full py-2 mt-4 bg-teal-600 text-white font-semibold rounded-md shadow-md hover:bg-teal-700 focus:ring-4 focus:ring-teal-300"
+          >
+            Add Appointment
+          </button>
+        </div>
       </Form>
     </Formik>
   );

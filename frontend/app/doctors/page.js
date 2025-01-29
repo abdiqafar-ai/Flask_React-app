@@ -1,3 +1,4 @@
+// app/doctors/page.js
 "use client";
 import { useState, useEffect } from "react";
 import api from "../services/api";
@@ -6,6 +7,7 @@ import AddDoctorForm from "../components/AddDoctorForm";
 
 const Doctors = () => {
   const [doctors, setDoctors] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     fetchDoctors();
@@ -20,11 +22,65 @@ const Doctors = () => {
     }
   };
 
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await api.delete(`/doctors/${id}`);
+      fetchDoctors(); // Refresh doctor list
+    } catch (error) {
+      console.error("Error deleting doctor:", error);
+    }
+  };
+
+  const handleUpdate = async (id, updatedData) => {
+    try {
+      await api.put(`/doctors/${id}`, updatedData);
+      fetchDoctors(); // Refresh doctor list
+    } catch (error) {
+      console.error("Error updating doctor:", error);
+    }
+  };
+
+  const filteredDoctors = doctors.filter((doctor) =>
+    doctor.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <div>
-      <h1>Doctors</h1>
-      <DoctorList doctors={doctors} />
-      <AddDoctorForm onAdd={fetchDoctors} />
+    <div className="max-w-6xl mx-auto p-6">
+      <h1 className="text-3xl font-semibold text-teal-700 text-center mb-6">
+        Doctors List
+      </h1>
+
+      {/* Search Input */}
+      <div className="mb-6">
+        <input
+          type="text"
+          placeholder="Search by Name"
+          value={searchTerm}
+          onChange={handleSearchChange}
+          className="w-full p-2 border border-teal-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+        />
+      </div>
+
+      {/* Doctor List */}
+      <div className="bg-white shadow-lg rounded-lg p-4 mb-8">
+        <DoctorList
+          doctors={filteredDoctors}
+          onDelete={handleDelete}
+          onUpdate={handleUpdate}
+        />
+      </div>
+
+      {/* Add Doctor Form */}
+      <div className="bg-teal-50 shadow-lg rounded-lg p-6">
+        <h2 className="text-2xl font-semibold text-teal-600 mb-4">
+          Add New Doctor
+        </h2>
+        <AddDoctorForm onAdd={fetchDoctors} />
+      </div>
     </div>
   );
 };
