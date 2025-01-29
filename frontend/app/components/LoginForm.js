@@ -28,7 +28,7 @@ const LoginForm = () => {
               const response = await api.post("/auth/login", values);
 
               if (response.status === 200) {
-                router.replace("/"); // Redirect to home page after login
+                router.replace("/dashboard");
               } else {
                 setFieldError("password", "Invalid credentials");
               }

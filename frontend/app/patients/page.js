@@ -6,6 +6,7 @@ import AddPatientForm from "../components/AddPatientForm";
 
 const Patients = () => {
   const [patients, setPatients] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     fetchPatients();
@@ -20,11 +21,42 @@ const Patients = () => {
     }
   };
 
+  const filteredPatients = patients.filter((patient) => {
+    return (
+      patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      patient.email.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  });
+
   return (
-    <div>
-      <h1>Patients</h1>
-      <PatientList patients={patients} />
-      <AddPatientForm onAdd={fetchPatients} />
+    <div className="max-w-6xl mx-auto p-6">
+      <h1 className="text-3xl font-semibold text-teal-700 text-center mb-6">
+        Patients List
+      </h1>
+
+      {/* Search Input */}
+      <div className="mb-6">
+        <input
+          type="text"
+          placeholder="Search by Name or Email"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full p-2 border border-teal-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+        />
+      </div>
+
+      {/* Patient List */}
+      <div className="bg-white shadow-lg rounded-lg p-4 mb-8">
+        <PatientList patients={filteredPatients} />
+      </div>
+
+      {/* Add Patient Form */}
+      <div className="bg-teal-50 shadow-lg rounded-lg p-6">
+        <h2 className="text-2xl font-semibold text-teal-600 mb-4">
+          Add New Patient
+        </h2>
+        <AddPatientForm onAdd={fetchPatients} />
+      </div>
     </div>
   );
 };

@@ -1,4 +1,3 @@
-// app/components/AddPatientForm.js
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import api from "../services/api";
@@ -25,33 +24,120 @@ const AddPatientForm = ({ onAdd }) => {
         setSubmitting(false);
       }}
     >
-      <Form>
+      <Form className="space-y-6 max-w-lg mx-auto p-8 bg-white shadow-lg rounded-lg">
+        <h2 className="text-2xl font-semibold text-center text-teal-700">
+          Add New Patient
+        </h2>
+
+        {/* Name Field */}
         <div>
-          <label htmlFor="name">Name</label>
-          <Field name="name" type="text" />
-          <ErrorMessage name="name" />
+          <label
+            htmlFor="name"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Name
+          </label>
+          <Field
+            name="name"
+            type="text"
+            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+          />
+          <ErrorMessage
+            name="name"
+            component="div"
+            className="text-sm text-red-500"
+          />
         </div>
+
+        {/* Age Field */}
         <div>
-          <label htmlFor="age">Age</label>
-          <Field name="age" type="number" />
-          <ErrorMessage name="age" />
+          <label
+            htmlFor="age"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Age
+          </label>
+          <Field
+            name="age"
+            type="number"
+            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+          />
+          <ErrorMessage
+            name="age"
+            component="div"
+            className="text-sm text-red-500"
+          />
         </div>
+
+        {/* Gender Field */}
         <div>
-          <label htmlFor="gender">Gender</label>
-          <Field name="gender" type="text" />
-          <ErrorMessage name="gender" />
+          <label
+            htmlFor="gender"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Gender
+          </label>
+          <Field
+            name="gender"
+            type="text"
+            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+          />
+          <ErrorMessage
+            name="gender"
+            component="div"
+            className="text-sm text-red-500"
+          />
         </div>
+
+        {/* Email Field */}
         <div>
-          <label htmlFor="email">Email</label>
-          <Field name="email" type="email" />
-          <ErrorMessage name="email" />
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Email
+          </label>
+          <Field
+            name="email"
+            type="email"
+            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+          />
+          <ErrorMessage
+            name="email"
+            component="div"
+            className="text-sm text-red-500"
+          />
         </div>
+
+        {/* Phone Field */}
         <div>
-          <label htmlFor="phone">Phone</label>
-          <Field name="phone" type="text" />
-          <ErrorMessage name="phone" />
+          <label
+            htmlFor="phone"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Phone
+          </label>
+          <Field
+            name="phone"
+            type="text"
+            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+          />
+          <ErrorMessage
+            name="phone"
+            component="div"
+            className="text-sm text-red-500"
+          />
         </div>
-        <button type="submit">Add Patient</button>
+
+        {/* Submit Button */}
+        <div className="flex justify-center">
+          <button
+            type="submit"
+            className="w-full py-2 mt-4 bg-teal-600 text-white font-semibold rounded-md shadow-md hover:bg-teal-700 focus:ring-4 focus:ring-teal-300"
+          >
+            Add Patient
+          </button>
+        </div>
       </Form>
     </Formik>
   );
