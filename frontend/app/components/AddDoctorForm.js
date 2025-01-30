@@ -1,12 +1,38 @@
-// components/AddDoctorForm.js
+// AddDoctorForm.js
+"use client";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import api from "../services/api";
+import { useState, useEffect } from "react";
 
-const AddDoctorForm = ({ onAdd }) => {
+const AddDoctorForm = ({ onAdd, editDoctor, setEditDoctor }) => {
+  const initialValues = {
+    name: editDoctor?.name || "",
+    specialization: editDoctor?.specialization || "",
+    email: editDoctor?.email || "",
+    phone: editDoctor?.phone || "",
+    availability: editDoctor?.availability || [], // Add availability
+  };
+
+  const [availability, setAvailability] = useState(initialValues.availability);
+
+  useEffect(() => {
+    if (editDoctor) {
+      setAvailability(editDoctor.availability || []);
+    }
+  }, [editDoctor]);
+
+  const handleAvailabilityChange = (day, time) => {
+    const newAvailability = availability.includes(`${day}:${time}`)
+      ? availability.filter((slot) => slot !== `${day}:${time}`)
+      : [...availability, `${day}:${time}`];
+
+    setAvailability(newAvailability);
+  };
+
   return (
     <Formik
-      initialValues={{ name: "", specialization: "", email: "", phone: "" }}
+      initialValues={initialValues}
       validationSchema={Yup.object({
         name: Yup.string().required("Required"),
         specialization: Yup.string().required("Required"),
@@ -15,20 +41,32 @@ const AddDoctorForm = ({ onAdd }) => {
       })}
       onSubmit={async (values, { setSubmitting, resetForm }) => {
         try {
-          await api.post("/doctors", values);
+          if (editDoctor) {
+            await api.put(`/doctors/${editDoctor.id}`, {
+              ...values,
+              availability, // Add availability to the submitted values
+            });
+          } else {
+            await api.post("/doctors", {
+              ...values,
+              availability, // Add availability when adding a new doctor
+            });
+          }
           resetForm();
           onAdd();
+          setEditDoctor(null); // Reset the editDoctor state after saving
         } catch (error) {
-          console.error("Error adding doctor:", error);
+          console.error("Error adding/updating doctor:", error);
         }
         setSubmitting(false);
       }}
     >
       <Form className="space-y-6 p-6 bg-white shadow-lg rounded-lg">
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-          Add Doctor
+          {editDoctor ? "Edit Doctor" : "Add Doctor"}
         </h2>
 
+        {/* Name field */}
         <div>
           <label
             htmlFor="name"
@@ -48,6 +86,7 @@ const AddDoctorForm = ({ onAdd }) => {
           />
         </div>
 
+        {/* Specialization field */}
         <div>
           <label
             htmlFor="specialization"
@@ -67,6 +106,7 @@ const AddDoctorForm = ({ onAdd }) => {
           />
         </div>
 
+        {/* Email field */}
         <div>
           <label
             htmlFor="email"
@@ -86,6 +126,7 @@ const AddDoctorForm = ({ onAdd }) => {
           />
         </div>
 
+        {/* Phone field */}
         <div>
           <label
             htmlFor="phone"
@@ -105,12 +146,38 @@ const AddDoctorForm = ({ onAdd }) => {
           />
         </div>
 
-        <div className="flex justify-end">
+        {/* Availability section */}
+        <div>
+          <h3 className="text-lg font-semibold">Availability</h3>
+          <div className="grid grid-cols-2 gap-4 mt-4">
+            {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].map(
+              (day) => (
+                <div key={day} className="flex flex-col">
+                  <label className="text-sm font-medium">{day}</label>
+                  {["Morning", "Afternoon", "Evening"].map((time) => (
+                    <div key={time} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        checked={availability.includes(`${day}:${time}`)}
+                        onChange={() => handleAvailabilityChange(day, time)}
+                        className="mr-2"
+                      />
+                      <span className="text-sm">{time}</span>
+                    </div>
+                  ))}
+                </div>
+              )
+            )}
+          </div>
+        </div>
+
+        {/* Submit button */}
+        <div className="flex justify-center">
           <button
             type="submit"
-            className="px-6 py-2 text-white bg-teal-500 rounded-md hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-300"
+            className="w-full py-2 mt-4 bg-teal-600 text-white font-semibold rounded-md shadow-md"
           >
-            Add Doctor
+            {editDoctor ? "Update Doctor" : "Add Doctor"}
           </button>
         </div>
       </Form>

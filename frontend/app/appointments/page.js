@@ -1,65 +1,105 @@
-// app/appointments/page.js
 "use client";
-import { useState, useEffect } from "react";
-import api from "../services/api";
-import AppointmentList from "../components/AppointmentList";
-import AddAppointmentForm from "../components/AddAppointmentForm";
+import { useEffect, useState } from "react";
+import Api from "../services/api"; // Ensure correct import path
+import AppointmentForm from "../components/AppointmentForm";
+import AppointmentList from "../components/AppointmentsList";
 
-const Appointments = () => {
+export default function Appointments() {
   const [appointments, setAppointments] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [editingAppointment, setEditingAppointment] = useState(null);
 
   useEffect(() => {
+    async function fetchAppointments() {
+      try {
+        const response = await Api.get("/appointments");
+        setAppointments(response.data);
+      } catch (error) {
+        console.error("Error fetching appointments", error);
+      }
+    }
     fetchAppointments();
   }, []);
 
-  const fetchAppointments = async () => {
+  const handleCreate = async (formData) => {
+    const formattedDate = new Date(formData.appointment_date)
+      .toISOString()
+      .slice(0, 19)
+      .replace("T", " ");
+
+    const updatedFormData = {
+      ...formData,
+      appointment_date: formattedDate,
+    };
+
     try {
-      const response = await api.get("/appointments");
+      await Api.post("/appointments", updatedFormData);
+      const response = await Api.get("/appointments");
       setAppointments(response.data);
     } catch (error) {
-      console.error("Error fetching appointments:", error);
+      console.error("Error during appointment creation:", error);
     }
   };
 
-  const filteredAppointments = appointments.filter((appointment) =>
-    appointment.reason.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const handleUpdate = async (formData) => {
+    try {
+      await Api.put(`/appointments/${editingAppointment.id}`, formData);
+      const response = await Api.get("/appointments");
+      setAppointments(response.data);
+      setEditingAppointment(null);
+    } catch (error) {
+      console.error("Error updating appointment", error);
+    }
+  };
+
+  const handleEdit = (appointment) => {
+    setEditingAppointment(appointment);
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await Api.delete(`/appointments/${id}`);
+      const response = await Api.get("/appointments");
+      setAppointments(response.data);
+    } catch (error) {
+      console.error("Error deleting appointment", error);
+    }
+  };
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <h1 className="text-3xl font-semibold text-teal-700 text-center mb-6">
-        Appointments Management
+    <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-6">
+      <h1 className="text-3xl font-bold text-gray-800 text-center mb-6">
+        Appointments
       </h1>
 
-      {/* Search Input */}
-      <div className="mb-6">
-        <input
-          type="text"
-          placeholder="Search by Reason"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full p-2 border border-teal-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
-        />
+      <div className="bg-gray-100 p-4 rounded-lg shadow-md">
+        {editingAppointment ? (
+          <div>
+            <h2 className="text-xl font-semibold text-gray-700 mb-4">
+              Edit Appointment
+            </h2>
+            <AppointmentForm
+              appointment={editingAppointment}
+              onSubmit={handleUpdate}
+            />
+          </div>
+        ) : (
+          <div>
+            <h2 className="text-xl font-semibold text-gray-700 mb-4">
+              Create Appointment
+            </h2>
+            <AppointmentForm appointment={null} onSubmit={handleCreate} />
+          </div>
+        )}
       </div>
 
-      {/* Appointment List */}
-      <div className="bg-white shadow-lg rounded-lg p-4 mb-8">
-        <AppointmentList
-          appointments={filteredAppointments}
-          onAdd={fetchAppointments}
-        />
-      </div>
-
-      {/* Add Appointment Form */}
-      <div className="bg-teal-50 shadow-lg rounded-lg p-6">
-        <h2 className="text-2xl font-semibold text-teal-600 mb-4">
-          Add New Appointment
-        </h2>
-        <AddAppointmentForm onAdd={fetchAppointments} />
-      </div>
+      <h2 className="text-2xl font-semibold text-gray-700 mt-6 mb-4">
+        Appointment List
+      </h2>
+      <AppointmentList
+        appointments={appointments}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+      />
     </div>
   );
-};
-
-export default Appointments;
+}

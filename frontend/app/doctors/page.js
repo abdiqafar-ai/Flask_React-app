@@ -1,4 +1,3 @@
-// app/doctors/page.js
 "use client";
 import { useState, useEffect } from "react";
 import api from "../services/api";
@@ -26,26 +25,34 @@ const Doctors = () => {
     setSearchTerm(event.target.value);
   };
 
-  const handleDelete = async (id) => {
-    try {
-      await api.delete(`/doctors/${id}`);
-      fetchDoctors(); // Refresh doctor list
-    } catch (error) {
-      console.error("Error deleting doctor:", error);
-    }
-  };
+const handleDelete = async (id) => {
+  try {
+    console.log("Deleting doctor with id:", id); 
+    await api.delete(`/doctors/${id}`);
+    setDoctors((prevDoctors) =>
+      prevDoctors.filter((doctor) => doctor.id !== id)
+    );
+  } catch (error) {
+    console.error("Error deleting doctor:", error);
+    alert("Error deleting doctor. Please try again.");
+  }
+};
+
 
   const handleUpdate = async (id, updatedData) => {
     try {
-      await api.put(`/doctors/${id}`, updatedData);
-      fetchDoctors(); // Refresh doctor list
+      const response = await api.put(`/doctors/${id}`, updatedData);
+      setDoctors((prevDoctors) =>
+        prevDoctors.map((doctor) => (doctor.id === id ? response.data : doctor))
+      );
     } catch (error) {
       console.error("Error updating doctor:", error);
+      alert("Error updating doctor. Please try again.");
     }
   };
 
   const filteredDoctors = doctors.filter((doctor) =>
-    doctor.name.toLowerCase().includes(searchTerm.toLowerCase())
+    doctor.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -79,7 +86,7 @@ const Doctors = () => {
         <h2 className="text-2xl font-semibold text-teal-600 mb-4">
           Add New Doctor
         </h2>
-        <AddDoctorForm onAdd={fetchDoctors} />
+        <AddDoctorForm onAdd={fetchDoctors} />{" "}
       </div>
     </div>
   );

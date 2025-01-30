@@ -9,6 +9,8 @@ from datetime import datetime
 
 main_bp = Blueprint('main', __name__)
 
+# Patients Routes
+
 @main_bp.route('/patients', methods=['GET'])
 def get_patients():
     patients = Patient.query.all()
@@ -20,12 +22,14 @@ def get_patient(id):
     return patient_schema.jsonify(patient)
 
 @main_bp.route('/patients', methods=['POST'])
-def add_patient():
+def create_patient():
     data = request.get_json()
-    new_patient = Patient(**data)
+    if not data or 'name' not in data or 'age' not in data or 'gender' not in data or 'email' not in data or 'phone' not in data:
+        return jsonify({'message': 'Missing required fields'}), 400
+    new_patient = Patient(name=data['name'], age=data['age'], gender=data['gender'], email=data['email'], phone=data['phone'])
     db.session.add(new_patient)
     db.session.commit()
-    return patient_schema.jsonify(new_patient), 201
+    return jsonify({'message': 'Patient created successfully'}), 201
 
 @main_bp.route('/patients/<id>', methods=['PUT'])
 def update_patient(id):
@@ -43,6 +47,7 @@ def delete_patient(id):
     db.session.commit()
     return '', 204
 
+# Doctors Routes
 
 @main_bp.route('/doctors', methods=['GET'])
 def get_doctors():
@@ -62,66 +67,121 @@ def add_doctor():
     db.session.commit()
     return doctor_schema.jsonify(new_doctor), 201
 
-@main_bp.route('/doctors/<id>', methods=['PUT'])
+@main_bp.route('/doctors/<int:id>', methods=['PUT'])
 def update_doctor(id):
     doctor = Doctor.query.get(id)
-    data = request.get_json()
-    for key, value in data.items():
-        setattr(doctor, key, value)
-    db.session.commit()
-    return doctor_schema.jsonify(doctor)
+    if not doctor:
+        return jsonify({"message": "Doctor not found"}), 404
 
-@main_bp.route('/doctors/<int:id>', methods=['DELETE'])
-def delete_doctor(id):
-    doctor = Doctor.query.get(id)
+    try:
+        data = request.get_json()
+        doctor.name = data['name']
+        doctor.specialization = data['specialization']
+        doctor.email = data['email']
+        doctor.phone = data['phone']
+        doctor.availability = data['availability']
+        db.session.commit()
+        return jsonify({"message": "Doctor updated successfully"}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"message": "Error updating doctor", "error": str(e)}), 500
+
+
+@main_bp.route('/doctors/<int:doctor_id>', methods=['DELETE'])
+def delete_doctor(doctor_id):
+    doctor = Doctor.query.get(doctor_id)
+    if not doctor:
+        return {"message": "Doctor not found"}, 404
     db.session.delete(doctor)
     db.session.commit()
-    return '', 204
+    return {"message": "Doctor deleted successfully"}, 200
 
-# Appointment routes (similar to patient routes)
+
+
+@main_bp.route('/appointments', methods=['POST'])
+def create_appointment():
+    data = request.get_json()
+    
+    # Validate input
+    if not data.get('patient_id') or not data.get('doctor_id') or not data.get('appointment_date') or not data.get('reason'):
+        return jsonify({"error": "Missing required fields"}), 400
+    
+    # Create a new appointment
+    new_appointment = Appointment(
+        patient_id=data['patient_id'],
+        doctor_id=data['doctor_id'],
+        appointment_date=datetime.strptime(data['appointment_date'], '%Y-%m-%d %H:%M:%S'),  # Assuming the date format
+        reason=data['reason']
+    )
+    
+    try:
+        db.session.add(new_appointment)
+        db.session.commit()
+        return appointment_schema.jsonify(new_appointment), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
+# 2. Get all Appointments
 @main_bp.route('/appointments', methods=['GET'])
 def get_appointments():
     appointments = Appointment.query.all()
     return appointments_schema.jsonify(appointments)
 
-@main_bp.route('/appointments/<id>', methods=['GET'])
+# 3. Get a specific Appointment by ID
+@main_bp.route('/appointments/<int:id>', methods=['GET'])
 def get_appointment(id):
     appointment = Appointment.query.get(id)
+    
+    if not appointment:
+        return jsonify({"error": "Appointment not found"}), 404
+    
     return appointment_schema.jsonify(appointment)
 
-@main_bp.route('/appointments', methods=['POST'])  # Ensure this route requires authentication
-def create_appointment():
-    data = request.get_json()
-    try:
-        # Parse appointment_date from the input data
-        appointment_date = datetime.strptime(data['appointment_date'], '%Y-%m-%dT%H:%M:%S')
-        new_appointment = Appointment(
-            appointment_date=appointment_date,  # Use the correct field name
-            reason=data['reason'],
-            patient_id=data['patient_id'],
-            doctor_id=data['doctor_id'],
-            notes=data.get('notes', '')  # Optional field
-        )
-        db.session.add(new_appointment)
-        db.session.commit()
-        return appointment_schema.jsonify(new_appointment), 201
-    except KeyError as e:
-        return jsonify({"error": f"Missing field: {str(e)}"}), 400
-    except ValueError as e:
-        return jsonify({"error": f"Invalid date format: {str(e)}"}), 400
-
-@main_bp.route('/appointments/<id>', methods=['PUT'])
+# 4. Update an Appointment (PUT)
+@main_bp.route('/appointments/<int:id>', methods=['PUT'])
 def update_appointment(id):
     appointment = Appointment.query.get(id)
+    
+    if not appointment:
+        return jsonify({"error": "Appointment not found"}), 404
+    
     data = request.get_json()
-    for key, value in data.items():
-        setattr(appointment, key, value)
-    db.session.commit()
-    return appointment_schema.jsonify(appointment)
+    
+    # Update fields
+    if data.get('patient_id'):
+        appointment.patient_id = data['patient_id']
+    if data.get('doctor_id'):
+        appointment.doctor_id = data['doctor_id']
+    if data.get('appointment_date'):
+        try:
+            # Replace 'T' with a space to match expected format
+            appointment_date_str = data['appointment_date'].replace("T", " ")
+            appointment.appointment_date = datetime.strptime(appointment_date_str, '%Y-%m-%d %H:%M:%S')
+        except ValueError:
+            return jsonify({"error": "Invalid date format. Expected 'YYYY-MM-DDTHH:MM:SS'"}), 400
+    if data.get('reason'):
+        appointment.reason = data['reason']
+    
+    try:
+        db.session.commit()
+        return appointment_schema.jsonify(appointment)
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
 
+# 5. Delete an Appointment (DELETE)
 @main_bp.route('/appointments/<int:id>', methods=['DELETE'])
 def delete_appointment(id):
     appointment = Appointment.query.get(id)
-    db.session.delete(appointment)
-    db.session.commit()
-    return '', 204
+    
+    if not appointment:
+        return jsonify({"error": "Appointment not found"}), 404
+    
+    try:
+        db.session.delete(appointment)
+        db.session.commit()
+        return jsonify({"message": "Appointment deleted"})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
