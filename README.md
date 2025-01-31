@@ -42,16 +42,16 @@ Secure login and siggn up page.
 
 * BACKEND *
 
-1.Flask(python web Framework).
-2.SQLALCHEMY(ORM).
-3.SQLITE(Database).
+1. Flask(python web Framework).
+2. SQLALCHEMY(ORM).
+3. SQLITE(Database).
 
 * Frontend *
 
-1.Nextjs.
-2.Tailwind css for styling.
-3.Formik(Form handling).
-4.React Icons(For social media and other icons).
+1. Nextjs.
+2. Tailwind css for styling.
+3. Formik(Form handling).
+4. React Icons(For social media and other icons).
 
 ## INSTALLATION
 
