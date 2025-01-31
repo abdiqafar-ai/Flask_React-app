@@ -74,9 +74,9 @@ The backend will be running on http://127.0.0.1:5000.
 
 * Frontend *
 
-cd frontend.
-npm install.
-npm run dev.
+1. cd frontend.
+2. npm install.
+3. npm run dev.
 
 ## Usage
 
