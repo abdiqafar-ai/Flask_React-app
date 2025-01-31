@@ -41,7 +41,6 @@ const Contact = () => {
           reach out to us through the form below or our contact details.
         </p>
 
-        {/* Contact Details */}
         <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">
             Get in Touch
@@ -60,7 +59,6 @@ const Contact = () => {
           </div>
         </div>
 
-        {/* Contact Form */}
         <div className="bg-white shadow-lg rounded-lg p-6">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">
             Send Us a Message
@@ -108,7 +106,6 @@ const Contact = () => {
           </form>
         </div>
 
-        {/* Social Media Links */}
         <div className="mt-8 text-center">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">
             Follow Us
