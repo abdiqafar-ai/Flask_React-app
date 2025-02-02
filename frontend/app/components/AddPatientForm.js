@@ -70,6 +70,7 @@ const AddPatientForm = ({ onAdd }) => {
         </div>
 
         {/* Gender Field */}
+        {/* Gender Field */}
         <div>
           <label
             htmlFor="gender"
@@ -78,10 +79,14 @@ const AddPatientForm = ({ onAdd }) => {
             Gender
           </label>
           <Field
+            as="select"
             name="gender"
-            type="text"
             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
-          />
+          >
+            <option value="" label="Select gender" />
+            <option value="Male" label="Male" />
+            <option value="Female" label="Female" />
+          </Field>
           <ErrorMessage
             name="gender"
             component="div"

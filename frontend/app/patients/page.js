@@ -21,12 +21,12 @@ const Patients = () => {
     }
   };
 
-  const filteredPatients = patients.filter((patient) => {
-    return (
-      patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      patient.email.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  });
+  // Filter patients based on search term (letter by letter)
+  const filteredPatients = patients.filter((patient) =>
+    [patient.name, patient.email].some((field) =>
+      field.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  );
 
   return (
     <div className="max-w-6xl mx-auto p-6">
@@ -40,7 +40,7 @@ const Patients = () => {
           type="text"
           placeholder="Search by Name or Email"
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) => setSearchTerm(e.target.value)} // Update searchTerm letter by letter
           className="w-full p-2 border border-teal-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
         />
       </div>
