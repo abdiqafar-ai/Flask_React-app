@@ -12,6 +12,7 @@ export default function Appointments() {
     async function fetchAppointments() {
       try {
         const response = await Api.get("/appointments");
+        console.log(response.data); // Log to check the data
         setAppointments(response.data);
       } catch (error) {
         console.error("Error fetching appointments", error);
@@ -19,6 +20,7 @@ export default function Appointments() {
     }
     fetchAppointments();
   }, []);
+
 
   const handleCreate = async (formData) => {
     const formattedDate = new Date(formData.appointment_date)

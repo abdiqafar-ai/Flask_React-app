@@ -40,7 +40,7 @@ const Dashboard = () => {
                 href="/appointments"
                 className="text-lg hover:text-yellow-400 transition duration-300 ease-in-out"
               >
-                <i className="fas fa-calendar-check mr-2"></i>Appointments
+                <i className="fas fa-calendar-alt mr-2"></i>Appointments
               </Link>
             </li>
             <li>

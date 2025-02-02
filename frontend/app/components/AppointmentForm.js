@@ -1,89 +1,125 @@
-"use client";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import api from "../services/api";
 
 const AppointmentForm = ({ appointment, onSubmit }) => {
-  const [patientId, setPatientId] = useState("");
-  const [doctorId, setDoctorId] = useState("");
-  const [appointmentDate, setAppointmentDate] = useState("");
-  const [reason, setReason] = useState("");
+  const [patients, setPatients] = useState([]);
+  const [doctors, setDoctors] = useState([]);
+  const [patientId, setPatientId] = useState(
+    appointment ? appointment.patient_id : ""
+  );
+  const [doctorId, setDoctorId] = useState(
+    appointment ? appointment.doctor_id : ""
+  );
+  const [appointmentDate, setAppointmentDate] = useState(
+    appointment ? appointment.appointment_date : ""
+  );
+  const [reason, setReason] = useState(appointment ? appointment.reason : "");
 
   useEffect(() => {
-    if (appointment) {
-      setPatientId(appointment.patient_id);
-      setDoctorId(appointment.doctor_id);
-      setAppointmentDate(appointment.appointment_date);
-      setReason(appointment.reason);
-    } else {
-      setPatientId("");
-      setDoctorId("");
-      setAppointmentDate("");
-      setReason("");
-    }
-  }, [appointment]);
+    // Fetch patients and doctors once the component mounts
+    const fetchPatientsAndDoctors = async () => {
+      try {
+        const [patientsResponse, doctorsResponse] = await Promise.all([
+          api.get("/patients"),
+          api.get("/doctors"),
+        ]);
+        setPatients(patientsResponse.data);
+        setDoctors(doctorsResponse.data);
+      } catch (error) {
+        console.error("Error fetching patients and doctors:", error);
+      }
+    };
+    fetchPatientsAndDoctors();
+  }, []);
 
+  // Get patient name by ID
+  const getPatientName = (id) => {
+    const patient = patients.find((patient) => patient.id === id);
+    return patient ? patient.name : "Unknown Patient";
+  };
+
+  // Get doctor name by ID
+  const getDoctorName = (id) => {
+    const doctor = doctors.find((doctor) => doctor.id === id);
+    return doctor ? doctor.name : "Unknown Doctor";
+  };
+
+  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    const appointmentData = {
+    onSubmit({
       patient_id: patientId,
       doctor_id: doctorId,
       appointment_date: appointmentDate,
-      reason: reason,
-    };
-    onSubmit(appointmentData);
+      reason,
+    });
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-white p-4 rounded-lg shadow-md space-y-4"
-    >
+    <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="block text-gray-700 font-semibold">Patient ID:</label>
-        <input
-          type="number"
+        <label className="block text-gray-700">Patient</label>
+        <select
           value={patientId}
           onChange={(e) => setPatientId(e.target.value)}
-          required
-          className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-        />
+          className="w-full p-2 mt-1 border rounded-md"
+        >
+          <option value="">Select Patient</option>
+          {patients.map((patient) => (
+            <option key={patient.id} value={patient.id}>
+              {patient.name}
+            </option>
+          ))}
+        </select>
+        <p className="mt-2 text-gray-500">
+          Selected: {getPatientName(patientId)}
+        </p>
       </div>
+
       <div>
-        <label className="block text-gray-700 font-semibold">Doctor ID:</label>
-        <input
-          type="number"
+        <label className="block text-gray-700">Doctor</label>
+        <select
           value={doctorId}
           onChange={(e) => setDoctorId(e.target.value)}
-          required
-          className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-        />
+          className="w-full p-2 mt-1 border rounded-md"
+        >
+          <option value="">Select Doctor</option>
+          {doctors.map((doctor) => (
+            <option key={doctor.id} value={doctor.id}>
+              {doctor.name}
+            </option>
+          ))}
+        </select>
+        <p className="mt-2 text-gray-500">
+          Selected: {getDoctorName(doctorId)}
+        </p>
       </div>
+
       <div>
-        <label className="block text-gray-700 font-semibold">
-          Appointment Date:
-        </label>
+        <label className="block text-gray-700">Appointment Date</label>
         <input
           type="datetime-local"
           value={appointmentDate}
           onChange={(e) => setAppointmentDate(e.target.value)}
-          required
-          className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="w-full p-2 mt-1 border rounded-md"
         />
       </div>
+
       <div>
-        <label className="block text-gray-700 font-semibold">Reason:</label>
+        <label className="block text-gray-700">Reason</label>
         <input
           type="text"
           value={reason}
           onChange={(e) => setReason(e.target.value)}
-          required
-          className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="w-full p-2 mt-1 border rounded-md"
         />
       </div>
+
       <button
         type="submit"
-        className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition"
+        className="bg-blue-500 text-white px-4 py-2 rounded-md"
       >
-        Submit
+        {appointment ? "Update Appointment" : "Create Appointment"}
       </button>
     </form>
   );
