@@ -21,7 +21,7 @@ const Patients = () => {
     }
   };
 
-  // Filter patients based on search term (letter by letter)
+
   const filteredPatients = patients.filter((patient) =>
     [patient.name, patient.email].some((field) =>
       field.toLowerCase().includes(searchTerm.toLowerCase())
@@ -34,7 +34,7 @@ const Patients = () => {
         Patients List
       </h1>
 
-      {/* Search Input */}
+
       <div className="mb-6">
         <input
           type="text"
@@ -45,12 +45,12 @@ const Patients = () => {
         />
       </div>
 
-      {/* Patient List */}
+
       <div className="bg-white shadow-lg rounded-lg p-4 mb-8">
         <PatientList patients={filteredPatients} />
       </div>
 
-      {/* Add Patient Form */}
+
       <div className="bg-teal-50 shadow-lg rounded-lg p-6">
         <h2 className="text-2xl font-semibold text-teal-600 mb-4">
           Add New Patient

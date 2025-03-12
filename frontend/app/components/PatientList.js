@@ -37,7 +37,7 @@ const PatientList = ({ patients }) => {
       await api.put(`/patients/${currentPatient.id}`, updatedData);
       alert("Patient updated successfully");
 
-      // Update UI without reloading
+
       Object.assign(
         patients.find((p) => p.id === currentPatient.id),
         updatedData

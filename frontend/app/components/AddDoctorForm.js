@@ -44,17 +44,17 @@ const AddDoctorForm = ({ onAdd, editDoctor, setEditDoctor }) => {
           if (editDoctor) {
             await api.put(`/doctors/${editDoctor.id}`, {
               ...values,
-              availability, // Add availability to the submitted values
+              availability, 
             });
           } else {
             await api.post("/doctors", {
               ...values,
-              availability, // Add availability when adding a new doctor
+              availability, 
             });
           }
           resetForm();
           onAdd();
-          setEditDoctor(null); // Reset the editDoctor state after saving
+          setEditDoctor(null); 
         } catch (error) {
           console.error("Error adding/updating doctor:", error);
         }
@@ -66,7 +66,7 @@ const AddDoctorForm = ({ onAdd, editDoctor, setEditDoctor }) => {
           {editDoctor ? "Edit Doctor" : "Add Doctor"}
         </h2>
 
-        {/* Name field */}
+
         <div>
           <label
             htmlFor="name"
@@ -86,7 +86,7 @@ const AddDoctorForm = ({ onAdd, editDoctor, setEditDoctor }) => {
           />
         </div>
 
-        {/* Specialization field */}
+
         <div>
           <label
             htmlFor="specialization"
@@ -106,7 +106,7 @@ const AddDoctorForm = ({ onAdd, editDoctor, setEditDoctor }) => {
           />
         </div>
 
-        {/* Email field */}
+
         <div>
           <label
             htmlFor="email"
@@ -126,7 +126,7 @@ const AddDoctorForm = ({ onAdd, editDoctor, setEditDoctor }) => {
           />
         </div>
 
-        {/* Phone field */}
+
         <div>
           <label
             htmlFor="phone"
@@ -146,7 +146,6 @@ const AddDoctorForm = ({ onAdd, editDoctor, setEditDoctor }) => {
           />
         </div>
 
-        {/* Availability section */}
         <div>
           <h3 className="text-lg font-semibold">Availability</h3>
           <div className="grid grid-cols-2 gap-4 mt-4">
@@ -171,7 +170,7 @@ const AddDoctorForm = ({ onAdd, editDoctor, setEditDoctor }) => {
           </div>
         </div>
 
-        {/* Submit button */}
+
         <div className="flex justify-center">
           <button
             type="submit"

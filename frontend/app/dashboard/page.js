@@ -62,9 +62,9 @@ const Dashboard = () => {
           </ul>
         </aside>
 
-        {/* Main Content */}
+
         <main className="flex-1 p-8 bg-gray-50 overflow-auto">
-          {/* Welcome Section */}
+
           <section className="bg-white rounded-lg shadow-lg p-8 mb-6">
             <h3 className="text-3xl font-semibold text-gray-800 mb-4">
               Welcome to Medsphere Dashboard
@@ -74,14 +74,14 @@ const Dashboard = () => {
             </p>
             <div className="mt-6">
               <img
-                src="/doctor-patient.png" // Replace with your image path
+                src="/doctor-patient.png" 
                 alt="Doctor and Patient"
                 className="w-full h-auto rounded-lg shadow-md"
               />
             </div>
           </section>
 
-          {/* Recent Activities Section */}
+
           <section className="bg-white rounded-lg shadow-lg p-8 mb-6">
             <h3 className="text-2xl font-bold text-gray-700 mb-4">
               Recent Activities
@@ -96,7 +96,7 @@ const Dashboard = () => {
             </ul>
           </section>
 
-          {/* About Section */}
+
           <section className="bg-white rounded-lg shadow-lg p-8 mb-6">
             <h3 className="text-2xl font-bold text-gray-700 mb-4">
               About Medsphere
@@ -113,7 +113,6 @@ const Dashboard = () => {
             </Link>
           </section>
 
-          {/* Contact Section */}
           <section className="bg-white rounded-lg shadow-lg p-8 mb-6">
             <h3 className="text-2xl font-bold text-gray-700 mb-4">
               Contact Us

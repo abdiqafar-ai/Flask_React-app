@@ -1,27 +1,27 @@
-# app.py
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_marshmallow import Marshmallow
-from flask_migrate import Migrate
 from flask_cors import CORS
+from config import Config
+from extensions import db, ma, migrate  # Import from extensions
 import logging
 from logging.handlers import RotatingFileHandler
-from config import Config
 
 app = Flask(__name__)
 CORS(app)
 app.config.from_object(Config)
 
-db = SQLAlchemy(app)
-ma = Marshmallow(app)
-migrate = Migrate(app, db)
+# Initialize extensions
+db.init_app(app)
+ma.init_app(app)
+migrate.init_app(app, db)
 
+# Delay blueprint import
+def register_blueprints():
+    from auth import auth_bp
+    from routes import main_bp
+    app.register_blueprint(auth_bp, url_prefix='/api/auth')
+    app.register_blueprint(main_bp, url_prefix='/api')
 
-from auth import auth_bp
-from routes import main_bp
-
-app.register_blueprint(auth_bp, url_prefix='/api/auth')
-app.register_blueprint(main_bp, url_prefix='/api')
+register_blueprints()  # Register blueprints after app is initialized
 
 @app.route('/')
 def home():

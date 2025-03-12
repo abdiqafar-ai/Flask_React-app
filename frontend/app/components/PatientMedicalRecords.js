@@ -24,7 +24,7 @@ const PatientMedicalRecords = ({ patientId }) => {
     <div className="p-4 bg-white shadow-lg rounded-lg">
       <h2 className="text-xl font-semibold mb-4">Medical Records</h2>
 
-      {/* List of Records */}
+
       <ul>
         {records.length > 0 ? (
           records.map((record) => (

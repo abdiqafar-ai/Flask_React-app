@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from app import db
+from extensions import db
 from models import Patient, Doctor, Appointment, MedicalRecord
 from schemas import (
     patient_schema, patients_schema, doctor_schema, doctors_schema,
@@ -9,7 +9,7 @@ from datetime import datetime
 
 main_bp = Blueprint('main', __name__)
 
-# Patients Routes
+
 @main_bp.route('/patients', methods=['GET'])
 def get_patients():
     patients = Patient.query.all()
@@ -46,7 +46,7 @@ def delete_patient(id):
     db.session.commit()
     return '', 204
 
-# Doctors Routes
+
 @main_bp.route('/doctors', methods=['GET'])
 def get_doctors():
     doctors = Doctor.query.all()
@@ -93,7 +93,7 @@ def delete_doctor(doctor_id):
     db.session.commit()
     return {"message": "Doctor deleted successfully"}, 200
 
-# Appointments Routes
+
 @main_bp.route('/appointments', methods=['POST'])
 def create_appointment():
     data = request.get_json()
@@ -163,9 +163,9 @@ def delete_appointment(id):
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
 
-# Medical Records Routes
 
-# 1. Create a Medical Record
+
+
 @main_bp.route('/patients/<int:patient_id>/medical-records', methods=['POST'])
 def create_medical_record(patient_id):
     patient = Patient.query.get(patient_id)
@@ -187,7 +187,7 @@ def create_medical_record(patient_id):
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
 
-# 2. Get all Medical Records for a Patient
+
 @main_bp.route('/patients/<int:patient_id>/medical-records', methods=['GET'])
 def get_medical_records(patient_id):
     patient = Patient.query.get(patient_id)
@@ -196,7 +196,7 @@ def get_medical_records(patient_id):
     records = MedicalRecord.query.filter_by(patient_id=patient_id).all()
     return medical_records_schema.jsonify(records)
 
-# 3. Get a specific Medical Record by ID
+
 @main_bp.route('/medical-records/<int:id>', methods=['GET'])
 def get_medical_record(id):
     record = MedicalRecord.query.get(id)
@@ -204,7 +204,7 @@ def get_medical_record(id):
         return jsonify({"error": "Medical record not found"}), 404
     return medical_record_schema.jsonify(record)
 
-# 4. Update a Medical Record (PUT)
+
 @main_bp.route('/medical-records/<int:id>', methods=['PUT'])
 def update_medical_record(id):
     record = MedicalRecord.query.get(id)
@@ -226,7 +226,7 @@ def update_medical_record(id):
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
 
-# 5. Delete a Medical Record (DELETE)
+
 @main_bp.route('/medical-records/<int:id>', methods=['DELETE'])
 def delete_medical_record(id):
     record = MedicalRecord.query.get(id)

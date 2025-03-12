@@ -61,7 +61,7 @@ const handleDelete = async (id) => {
         Doctors List
       </h1>
 
-      {/* Search Input */}
+
       <div className="mb-6">
         <input
           type="text"
@@ -72,7 +72,7 @@ const handleDelete = async (id) => {
         />
       </div>
 
-      {/* Doctor List */}
+
       <div className="bg-white shadow-lg rounded-lg p-4 mb-8">
         <DoctorList
           doctors={filteredDoctors}
@@ -81,7 +81,7 @@ const handleDelete = async (id) => {
         />
       </div>
 
-      {/* Add Doctor Form */}
+
       <div className="bg-teal-50 shadow-lg rounded-lg p-6">
         <h2 className="text-2xl font-semibold text-teal-600 mb-4">
           Add New Doctor

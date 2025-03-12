@@ -16,7 +16,7 @@ const AppointmentForm = ({ appointment, onSubmit }) => {
   const [reason, setReason] = useState(appointment ? appointment.reason : "");
 
   useEffect(() => {
-    // Fetch patients and doctors once the component mounts
+
     const fetchPatientsAndDoctors = async () => {
       try {
         const [patientsResponse, doctorsResponse] = await Promise.all([
@@ -32,19 +32,19 @@ const AppointmentForm = ({ appointment, onSubmit }) => {
     fetchPatientsAndDoctors();
   }, []);
 
-  // Get patient name by ID
+
   const getPatientName = (id) => {
     const patient = patients.find((patient) => patient.id === id);
     return patient ? patient.name : "Unknown Patient";
   };
 
-  // Get doctor name by ID
+
   const getDoctorName = (id) => {
     const doctor = doctors.find((doctor) => doctor.id === id);
     return doctor ? doctor.name : "Unknown Doctor";
   };
 
-  // Handle form submission
+
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit({

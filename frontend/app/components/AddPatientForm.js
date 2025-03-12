@@ -29,7 +29,7 @@ const AddPatientForm = ({ onAdd }) => {
           Add New Patient
         </h2>
 
-        {/* Name Field */}
+
         <div>
           <label
             htmlFor="name"
@@ -49,7 +49,7 @@ const AddPatientForm = ({ onAdd }) => {
           />
         </div>
 
-        {/* Age Field */}
+
         <div>
           <label
             htmlFor="age"
@@ -69,8 +69,7 @@ const AddPatientForm = ({ onAdd }) => {
           />
         </div>
 
-        {/* Gender Field */}
-        {/* Gender Field */}
+
         <div>
           <label
             htmlFor="gender"
@@ -94,7 +93,7 @@ const AddPatientForm = ({ onAdd }) => {
           />
         </div>
 
-        {/* Email Field */}
+
         <div>
           <label
             htmlFor="email"
@@ -114,7 +113,7 @@ const AddPatientForm = ({ onAdd }) => {
           />
         </div>
 
-        {/* Phone Field */}
+
         <div>
           <label
             htmlFor="phone"
@@ -134,7 +133,7 @@ const AddPatientForm = ({ onAdd }) => {
           />
         </div>
 
-        {/* Submit Button */}
+
         <div className="flex justify-center">
           <button
             type="submit"

@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import Api from "../services/api"; // Ensure correct import path
+import Api from "../services/api";
 import AppointmentForm from "../components/AppointmentForm";
 import AppointmentList from "../components/AppointmentsList";
 
@@ -12,7 +12,7 @@ export default function Appointments() {
     async function fetchAppointments() {
       try {
         const response = await Api.get("/appointments");
-        console.log(response.data); // Log to check the data
+        console.log(response.data); 
         setAppointments(response.data);
       } catch (error) {
         console.error("Error fetching appointments", error);

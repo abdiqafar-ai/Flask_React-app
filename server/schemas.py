@@ -1,4 +1,4 @@
-from app import ma
+from extensions import ma 
 from models import User, Patient, Doctor, Appointment, MedicalRecord
 
 class UserSchema(ma.SQLAlchemyAutoSchema):
