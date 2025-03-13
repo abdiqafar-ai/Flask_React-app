@@ -1,6 +1,12 @@
+from dotenv import load_dotenv
 import os
-from datetime import timedelta
+
+load_dotenv()  # Load environment variables from .env
 
 class Config:
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///hospital.db'
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    DATABASE_URL = os.getenv("DATABASE_URL")
+    if DATABASE_URL:
+        SQLALCHEMY_DATABASE_URI = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+    else:
+        raise RuntimeError("DATABASE_URL is not set.")
+    
